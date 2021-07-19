@@ -2,9 +2,11 @@
 #include <gl/glut.h>
 #include <cmath>
 #include <vector>
+#include <string>
 
 using std::vector;
 using std::pair;
+using std::string;
 
 void draw_line(float x, float y, float x1, float y1);
 
@@ -17,26 +19,27 @@ float v = 0.5;
 
 float shock_pink[3] = {255.0f/255.0f, 32.0f/255.0f, 143.0f/255.0f};
 
-int when = 10;
-int default_when = 10;
+int when = 5;
+int default_when = 5;
 
 
 class Curve {
 private:
 	vector<pair<float,float>> coor{};
+	string func; //TODO fare un array di operazioni senza parsare ogni volta
 public:
-	Curve() { coor; };
-	pair<float, float> function() {
+	Curve() { coor; func = "";};
+	pair<float, float> function(string s) {
 		pair<float, float> res{};
 		//parsing della funzione
-		res.first = t; //qui metterai la funzione parametrica
-		res.second = pow(t,2);
+		res.first = t * cos(t);
+		res.second = t * sin(t);
 		t += precision;
 		return res;
 	};
 	void add_points() {
 		pair<float, float> temp{};
-		temp = function();
+		temp = function(func);
 		coor.push_back(temp);
 	};
 	void draw_curve() {
@@ -80,6 +83,11 @@ void renderScene(void) {
 	draw_line(0, 0, 30, 0);
 	glColor3f(0.0f, 1.0f, 0.0f);
 	draw_line(0, 0, 0, 30);
+	glColor3f(0.0f, 0.0f, 1.0f);
+	glBegin(GL_LINES);
+	glVertex3d(0, 0, 0);
+	glVertex3d(0, 0, 50);
+	glEnd();
 	glColor3f(shock_pink[0], shock_pink[1], shock_pink[2]);
 	curve.draw_curve();
 	//aggiunta punto ogni 40 cicli
