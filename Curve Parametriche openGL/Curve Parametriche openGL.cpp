@@ -12,23 +12,26 @@ void draw_line(float x, float y, float x1, float y1);
 
 float t = 0;
 float precision = 0.025;
-float lx = 0.0f, lz = -1.0f, ly = 0.0f;
+float lx = -1.0f, lz = -1.0f, ly = 0.0f;
 // XZ position of the camera
-float x = 2.0f, z = 4.0f, y = 1.0f;
+float x = 10.f, z = 5.0f, y = 0.0f;
 float v = 0.5;
 
 float shock_pink[3] = {255.0f/255.0f, 32.0f/255.0f, 143.0f/255.0f};
 
-int when = 5;
-int default_when = 5;
+int when = 50;
+int default_when = 50;
+int w = 1;
+float color_ratio = 0.01f;
 
 
 class Curve {
 private:
 	vector<pair<float,float>> coor{};
 	string func; //TODO fare un array di operazioni senza parsare ogni volta
+	float colour[3];
 public:
-	Curve() { coor; func = "";};
+	Curve() { coor; func = ""; colour[0] = 1.0, colour[1] = 0.0, colour[2] = 0.0; };
 	pair<float, float> function(string s) {
 		pair<float, float> res{};
 		//parsing della funzione
@@ -42,9 +45,26 @@ public:
 		temp = function(func);
 		coor.push_back(temp);
 	};
+	void change_colour() {
+		if (colour[w] < 1.00f)
+			colour[w] += color_ratio;
+		else {
+			colour[(w + 2) % 3] -= color_ratio;
+			if (colour[(w + 2) % 3] < 0.00f)
+				w = (w + 1) % 3;
+		}
+	}
+	void reset_colour() {
+		w = 1;
+		colour[0] = 1.0; colour[1] = colour[2] = 0.0;
+	}
 	void draw_curve() {
-		for (int i = 0; i < (int)coor.size() - 1 ; ++i)
+		reset_colour();
+		for (int i = 0; i < (int)coor.size() - 1; ++i) {
+			change_colour();
+			glColor3f(colour[0], colour[1], colour[2]);
 			draw_line(coor[i].first, coor[i].second, coor[i + 1].first, coor[i + 1].second);
+		}
 	};
 };
 
@@ -62,10 +82,19 @@ void processNormalKeys(unsigned char key, int xx, int yy) {
 	}
 }
 
+//void draw_line(float x, float y, float x1, float y1) {
+//	glBegin(GL_LINES);
+//	glVertex2d(x, y);
+//	glVertex2d(x1, y1);
+//	glEnd();
+//}
+
 void draw_line(float x, float y, float x1, float y1) {
-	glBegin(GL_LINES);
-	glVertex2d(x, y);
-	glVertex2d(x1, y1);
+	glBegin(GL_QUADS);
+	glVertex3f(x,y,-1.0);
+	glVertex3f(x1,y1,-1.0);
+	glVertex3f(x1, y1, 1.0);
+	glVertex3f(x,y,1.0);
 	glEnd();
 }
 
@@ -123,7 +152,7 @@ void changeSize(int w, int h) {
 
 int main(int argc, char** argv) {
 	glutInit(&argc, argv);
-	glutInitWindowPosition(100, 100);
+	glutInitWindowPosition(0, 0);
 	glutInitWindowSize(2560, 1440);
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
 	glutCreateWindow("Curve Parametriche");
