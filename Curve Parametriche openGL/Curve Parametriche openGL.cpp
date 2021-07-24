@@ -12,9 +12,9 @@ void draw_line(float x, float y, float x1, float y1);
 
 float t = 0;
 float precision = 0.025;
-float lx = -1.0f, lz = -1.0f, ly = 0.0f;
+float lx = -0.2f, lz = -1.0f, ly = 0.0f;
 // XZ position of the camera
-float x = 10.f, z = 5.0f, y = 0.0f;
+float x = 0.f, z = 6.0f, y = 0.0f;
 float v = 0.5;
 
 float shock_pink[3] = {255.0f/255.0f, 32.0f/255.0f, 143.0f/255.0f};
@@ -107,8 +107,8 @@ void renderScene(void) {
 	gluLookAt(x, y, z,
 		x + lx, y + ly, z + lz,
 		0.0f, 1.0f, 0.0f);
-
-	glColor3f(0.9f, 0.009f, 0.009f);
+	//serve a disegnare gli assi
+	/*glColor3f(0.9f, 0.009f, 0.009f);
 	draw_line(0, 0, 30, 0);
 	glColor3f(0.0f, 1.0f, 0.0f);
 	draw_line(0, 0, 0, 30);
@@ -116,7 +116,7 @@ void renderScene(void) {
 	glBegin(GL_LINES);
 	glVertex3d(0, 0, 0);
 	glVertex3d(0, 0, 50);
-	glEnd();
+	glEnd();*/
 	glColor3f(shock_pink[0], shock_pink[1], shock_pink[2]);
 	curve.draw_curve();
 	//aggiunta punto ogni 40 cicli
