@@ -9,7 +9,7 @@ using std::pair;
 using std::string;
 
 void draw_line(float x, float y, float x1, float y1);
-
+float pi = 3.14/2;
 float t = 0;
 float precision = 0.025;
 float lx = -0.2f, lz = -1.0f, ly = 0.0f;
@@ -19,8 +19,10 @@ float v = 0.5;
 
 float shock_pink[3] = {255.0f/255.0f, 32.0f/255.0f, 143.0f/255.0f};
 
-int when = 50;
-int default_when = 50;
+
+//va a caso la velocità...
+int when = 5;
+int default_when = 5;
 int w = 1;
 float color_ratio = 0.01f;
 
@@ -60,6 +62,7 @@ public:
 	}
 	void draw_curve() {
 		reset_colour();
+		pi = 3.14 / 2;
 		for (int i = 0; i < (int)coor.size() - 1; ++i) {
 			change_colour();
 			glColor3f(colour[0], colour[1], colour[2]);
@@ -91,10 +94,11 @@ void processNormalKeys(unsigned char key, int xx, int yy) {
 
 void draw_line(float x, float y, float x1, float y1) {
 	glBegin(GL_QUADS);
-	glVertex3f(x,y,-1.0);
-	glVertex3f(x1,y1,-1.0);
-	glVertex3f(x1, y1, 1.0);
-	glVertex3f(x,y,1.0);
+	glVertex3f(x + cos(pi), y, sin(pi));
+	glVertex3f(x - cos(pi), y, -sin(pi));
+	pi += 0.1;
+	glVertex3f(x1 - cos(pi), y1, -sin(pi));
+	glVertex3f(x1 + cos(pi) ,y1, sin(pi));
 	glEnd();
 }
 
